@@ -1,9 +1,13 @@
-type Handler = () => any
+import { otherwise } from './symbols'
 
-export const Underscore: unique symbol = Symbol('_')
+export function match<T extends string | number>(value: T) {
+  return function (options: Record<T | symbol, () => any>) {
+    if (options[value]) {
+      return options[value]()
+    }
 
-export function match<T extends string | number>(match: T) {
-  return function (options: Record<T | typeof Underscore, Handler>) {
-    
+    if (options[otherwise]) {
+      return options[otherwise]()
+    }
   }
 }
