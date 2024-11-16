@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  - pull_request
+  - push
+  - workflow_dispatch
+
+jobs:
+  node-ci:
+    name: Node CI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: gabrielrufino/node-ci@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          sonar-token: ${{ secrets.SONAR_TOKEN }}
+
+concurrency:
+  group: ci_${{ github.ref }}
+  cancel-in-progress: true
