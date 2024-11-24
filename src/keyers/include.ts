@@ -1,4 +1,6 @@
-export function include<T>(...items: Array<T>) {
+import { ValueType } from '../types';
+
+export function include(...items: Array<ValueType>) {
   return JSON.stringify({
     keyer: include.name,
     items
