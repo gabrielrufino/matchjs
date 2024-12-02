@@ -1,4 +1,4 @@
-import { include } from './keyers'
+import { exclude, include } from './keyers'
 import { otherwise } from './symbols'
 import { ValueType } from './types'
 
@@ -15,6 +15,10 @@ export function match(value: ValueType) {
 
     for (const [key, parsed] of parsedKeyers) {
       if (parsed.keyer === include.name && parsed.items.includes(value)) {
+        return options[key]()
+      }
+
+      if (parsed.keyer === exclude.name && !parsed.items.includes(value)) {
         return options[key]()
       }
     }

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 
 import { match } from './match'
 import { otherwise } from './symbols'
-import { include } from './keyers'
+import { exclude, include } from './keyers'
 
 describe('match', () => {
   it('should return the result of the matched case', () => {
@@ -46,11 +46,22 @@ describe('match', () => {
     expect(result).toBe('other')
   })
 
-  describe('list', () => {
-    it('should return the expected result when the value matches one of the value in the list', () => {
+  describe('include', () => {
+    it('should return the expected result when the value matches one of the value in the `include` arguments', () => {
       const result = match('a')({
         [include('a', 'b', 'c')]: () => 'a, b or c',
         [include('d', 'e', 'f')]: () => 'd, e or f',
+        [otherwise]: () => 'other'
+      })
+
+      expect(result).toBe('a, b or c')
+    })
+  })
+
+  describe('exclude', () => {
+    it('should return the expected result when the value does not match one of the value in the `exclude` arguments', () => {
+      const result = match('d')({
+        [exclude('a', 'b', 'c')]: () => 'a, b or c',
         [otherwise]: () => 'other'
       })
 
