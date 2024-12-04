@@ -1,6 +1,6 @@
 {
   "name": "@gabrielrufino/matchjs",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -12,6 +12,6 @@
   "license": "UNLICENSED",
   "devDependencies": {
     "typescript": "^5.7.2",
-    "vitest": "^2.1.7"
+    "vitest": "^2.1.8"
   }
 }
