@@ -1,5 +1,7 @@
 # MatchJS
 
+[![CI](https://github.com/gabrielrufino/matchjs/actions/workflows/ci.yml/badge.svg)](https://github.com/gabrielrufino/matchjs/actions/workflows/ci.yml)
+[![CD](https://github.com/gabrielrufino/matchjs/actions/workflows/cd.yml/badge.svg)](https://github.com/gabrielrufino/matchjs/actions/workflows/cd.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=gabrielrufino_matchjs&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=gabrielrufino_matchjs)
 
 `MatchJS` is a flexible library that implements a value matching mechanism with support for custom cases, including special operators like `include`, `exclude`, and a fallback `otherwise`.
