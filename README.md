@@ -1,5 +1,6 @@
 # MatchJS
 
+[![Black Tech by Gabriel Rufino](https://img.shields.io/badge/Black_Tech-by_Gabriel_Rufino_%F0%9F%96%A4-white?style=flat-square&labelColor=444444)](https://gabrielrufino.com)
 [![CI](https://github.com/gabrielrufino/matchjs/actions/workflows/ci.yml/badge.svg)](https://github.com/gabrielrufino/matchjs/actions/workflows/ci.yml)
 [![CD](https://github.com/gabrielrufino/matchjs/actions/workflows/cd.yml/badge.svg)](https://github.com/gabrielrufino/matchjs/actions/workflows/cd.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=gabrielrufino_matchjs&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=gabrielrufino_matchjs)
@@ -116,13 +117,3 @@ Contributions are welcome! Please follow these steps:
 ## 📄 License
 
 This project is licensed under The Unlicense. See the [LICENSE](./LICENSE) file for details.
-
-## 💡 Acknowledgments
-
-Thanks to all contributors and users who made this project possible!
-
----
-
-<div align="center">
-Made with ❤️ by [Gabriel Rufino](https://github.com/gabrielrufino)
-</div>
