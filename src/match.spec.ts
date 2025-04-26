@@ -1,8 +1,8 @@
-import { describe, it, expect } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
+import { exclude, include } from './keyers'
 import { match } from './match'
 import { otherwise } from './symbols'
-import { exclude, include } from './keyers'
 
 describe('match', () => {
   it('should return the result of the matched case', () => {
@@ -51,7 +51,7 @@ describe('match', () => {
       const result = match('a')({
         [include('a', 'b', 'c')]: () => 'a, b or c',
         [include('d', 'e', 'f')]: () => 'd, e or f',
-        [otherwise]: () => 'other'
+        [otherwise]: () => 'other',
       })
 
       expect(result).toBe('a, b or c')
@@ -62,7 +62,7 @@ describe('match', () => {
     it('should return the expected result when the value does not match one of the value in the `exclude` arguments', () => {
       const result = match('d')({
         [exclude('a', 'b', 'c')]: () => 'a, b or c',
-        [otherwise]: () => 'other'
+        [otherwise]: () => 'other',
       })
 
       expect(result).toBe('a, b or c')

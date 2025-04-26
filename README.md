@@ -22,7 +22,7 @@ yarn add @gabrielrufino/matchjs
 ### Import
 
 ```ts
-import { match, otherwise, include, exclude } from '@gabrielrufino/matchjs'
+import { exclude, include, match, otherwise } from '@gabrielrufino/matchjs'
 ```
 
 ### Basic Example

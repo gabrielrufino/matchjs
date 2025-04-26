@@ -2,6 +2,8 @@
   "name": "@gabrielrufino/matchjs",
   "version": "1.0.10",
   "description": "",
+  "author": "Gabriel Rufino <contato@gabrielrufino.com>",
+  "license": "UNLICENSED",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
@@ -12,8 +14,6 @@
     "test:mutation": "npx stryker run",
     "test:watch": "vitest"
   },
-  "author": "Gabriel Rufino <contato@gabrielrufino.com>",
-  "license": "UNLICENSED",
   "devDependencies": {
     "@antfu/eslint-config": "^4.12.0",
     "@stryker-mutator/vitest-runner": "^8.7.1",
