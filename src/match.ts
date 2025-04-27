@@ -1,6 +1,6 @@
+import type { ValueType } from './types'
 import { exclude, include } from './keyers'
 import { otherwise } from './symbols'
-import { ValueType } from './types'
 
 export function match(value: ValueType) {
   return function (options: Record<ValueType | symbol, () => any>) {
@@ -10,7 +10,15 @@ export function match(value: ValueType) {
 
     const parsedKeyers = Object
       .keys(options)
-      .filter(key => key.match(/^\s*\{(?:\s*\"[^\"]+\"\s*:\s*(\"[^\"]*\"|\d+|true|false|null|\{.*?\}|\[.*?\])\s*,?)*\}\s*$/))
+      .filter((key) => {
+        try {
+          const parsed = JSON.parse(key)
+          return typeof parsed === 'object' && parsed !== null && !Array.isArray(parsed)
+        }
+        catch {
+          return false
+        }
+      })
       .map(key => [key, JSON.parse(key)])
 
     for (const [key, parsed] of parsedKeyers) {
