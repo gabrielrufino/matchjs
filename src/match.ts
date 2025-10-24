@@ -1,12 +1,12 @@
 import { deepStrictEqual } from 'node:assert'
-import { isPrimitive } from './helpers/is-primitive'
+import { isIndexable } from './helpers/is-indexable'
 import { exclude, include } from './keyers'
 import { object } from './keyers/object'
 import { otherwise } from './symbols'
 
 export function match(value: string | symbol | number | Record<string, any>) {
   return function (options: Record<string | symbol, () => any>) {
-    if (isPrimitive(value) && options[value]) {
+    if (isIndexable(value) && options[value]) {
       return options[value]()
     }
 
