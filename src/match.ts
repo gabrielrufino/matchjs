@@ -1,10 +1,12 @@
-import type { ValueType } from './types'
+import { deepStrictEqual } from 'node:assert'
+import { isPrimitive } from './helpers/is-primitive'
 import { exclude, include } from './keyers'
+import { object } from './keyers/object'
 import { otherwise } from './symbols'
 
-export function match(value: ValueType) {
-  return function (options: Record<ValueType | symbol, () => any>) {
-    if (options[value]) {
+export function match(value: string | symbol | number | Record<string, any>) {
+  return function (options: Record<string | symbol, () => any>) {
+    if (isPrimitive(value) && options[value]) {
       return options[value]()
     }
 
@@ -28,6 +30,14 @@ export function match(value: ValueType) {
 
       if (parsed.keyer === exclude.name && !parsed.items.includes(value)) {
         return options[key]()
+      }
+
+      if (parsed.keyer === object.name) {
+        try {
+          deepStrictEqual(value, parsed.value)
+          return options[key]()
+        }
+        catch {}
       }
     }
 
