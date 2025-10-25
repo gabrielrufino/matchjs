@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest'
 
 import { exclude, include } from './keyers'
+import { object } from './keyers/object'
 import { match } from './match'
 import { otherwise } from './symbols'
 
-describe('match', () => {
+describe(match.name, () => {
   it('should return the result of the matched case', () => {
     const result = match('test')({
       test: () => 'matched',
@@ -66,6 +67,30 @@ describe('match', () => {
       })
 
       expect(result).toBe('a, b or c')
+    })
+  })
+
+  describe('object', () => {
+    it('should return the expected result when the value deeply equals the object provided to the `object` keyer', () => {
+      const testObject = { a: 1, b: { c: 2 } }
+
+      const result = match(testObject)({
+        [object({ a: 1, b: { c: 2 } })]: () => 'matched object',
+        [otherwise]: () => 'other',
+      })
+
+      expect(result).toBe('matched object')
+    })
+
+    it('should return the otherwise case when the value does not deeply equal the object provided to the `object` keyer', () => {
+      const testObject = { a: 1, b: { c: 3 } }
+
+      const result = match(testObject)({
+        [object({ a: 1, b: { c: 2 } })]: () => 'matched object',
+        [otherwise]: () => 'other',
+      })
+
+      expect(result).toBe('other')
     })
   })
 })

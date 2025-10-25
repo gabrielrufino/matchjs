@@ -5,7 +5,7 @@
 [![CD](https://github.com/gabrielrufino/matchjs/actions/workflows/cd.yml/badge.svg)](https://github.com/gabrielrufino/matchjs/actions/workflows/cd.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=gabrielrufino_matchjs&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=gabrielrufino_matchjs)
 
-`MatchJS` is a flexible library that implements a value matching mechanism with support for custom cases, including special operators like `include`, `exclude`, and a fallback `otherwise`.
+`MatchJS` is a flexible library that implements a value matching mechanism with support for custom cases, including special operators like `include`, `exclude`, `object`, and a fallback `otherwise`. It supports matching both primitive values and complex objects with deep equality comparison.
 
 ## 📦 Installation
 
@@ -22,7 +22,7 @@ yarn add @gabrielrufino/matchjs
 ### Import
 
 ```ts
-import { exclude, include, match, otherwise } from '@gabrielrufino/matchjs'
+import { exclude, include, match, object, otherwise } from '@gabrielrufino/matchjs'
 ```
 
 ### Basic Example
@@ -59,18 +59,51 @@ const result = match('d')({
 console.log(result) // Output: "Not in A, B, or C"
 ```
 
+### Using `object`
+
+```ts
+const user = { name: 'John', age: 30 }
+
+const result = match(user)({
+  [object({ name: 'John', age: 30 })]: () => 'Exact user match',
+  [object({ name: 'Jane' })]: () => 'Different user',
+  [otherwise]: () => 'Unknown user'
+})
+
+console.log(result) // Output: "Exact user match"
+```
+
+### Complex Object Matching
+
+```ts
+const data = {
+  user: { id: 1, profile: { name: 'Alice' } },
+  settings: { theme: 'dark' }
+}
+
+const result = match(data)({
+  [object({
+    user: { id: 1, profile: { name: 'Alice' } },
+    settings: { theme: 'dark' }
+  })]: () => 'Complex match found',
+  [otherwise]: () => 'No match'
+})
+
+console.log(result) // Output: "Complex match found"
+```
+
 ## 🛠️ API
 
 ### `match(value)`
 
 #### Parameters
-- `value`: The value to be evaluated.
+- `value`: The value to be evaluated (string, number, symbol, or object).
 
 #### Returns
 A function that accepts an `options` object in the format `{ key: () => any }`, where:
 - `key` can be:
-  - An exact value to match.
-  - An operator like `include` or `exclude`.
+  - An exact value to match (for primitive values).
+  - An operator like `include`, `exclude`, or `object`.
   - The `otherwise` symbol as a fallback.
 
 #### Examples
@@ -87,6 +120,23 @@ Defines a set of values. Returns true if the value is included in the set.
 ### `exclude(...values)`
 
 Defines a set of values. Returns true if the value is **not** included in the set.
+
+---
+
+### `object(value)`
+
+Defines an object pattern for deep equality matching. Returns true if the input value deeply equals the provided object.
+
+#### Parameters
+- `value`: The object pattern to match against.
+
+#### Example
+```ts
+const result = match({ a: 1, b: { c: 2 } })({
+  [object({ a: 1, b: { c: 2 } })]: () => 'Deep match!',
+  [otherwise]: () => 'No match'
+})
+```
 
 ---
 
