@@ -1,4 +1,4 @@
-import { deepStrictEqual } from 'node:assert'
+import { dequal } from 'dequal'
 import { exclude, include } from '../keyers'
 import { object } from '../keyers/object'
 import { regex } from '../keyers/regex'
@@ -13,13 +13,7 @@ export function evaluateKeyer(parsed: any, value: any) {
   }
 
   if (parsed.keyer === object.name) {
-    try {
-      deepStrictEqual(value, parsed.value)
-      return true
-    }
-    catch {
-      return false
-    }
+    return dequal(value, parsed.value)
   }
 
   if (parsed.keyer === regex.name && typeof value === 'string') {
