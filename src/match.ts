@@ -37,7 +37,14 @@ export function match(value: string | symbol | number | Record<string, any>) {
           deepStrictEqual(value, parsed.value)
           return options[key]()
         }
-        catch {}
+        catch { }
+      }
+
+      if (parsed.keyer === 'regex' && typeof value === 'string') {
+        const pattern = new RegExp(parsed.pattern, parsed.flags)
+        if (pattern.test(value)) {
+          return options[key]()
+        }
       }
     }
 

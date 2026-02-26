@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { exclude, include } from './keyers'
+import { exclude, include, regex } from './keyers'
 import { object } from './keyers/object'
 import { match } from './match'
 import { otherwise } from './symbols'
@@ -87,6 +87,35 @@ describe(match.name, () => {
 
       const result = match(testObject)({
         [object({ a: 1, b: { c: 2 } })]: () => 'matched object',
+        [otherwise]: () => 'other',
+      })
+
+      expect(result).toBe('other')
+    })
+  })
+
+  describe('regex', () => {
+    it('should return the expected result when the string value matches the regex pattern', () => {
+      const result = match('hello world')({
+        [regex(/^hello/)]: () => 'starts with hello',
+        [otherwise]: () => 'other',
+      })
+
+      expect(result).toBe('starts with hello')
+    })
+
+    it('should return the otherwise case when the string value does not match the regex pattern', () => {
+      const result = match('goodbye world')({
+        [regex(/^hello/)]: () => 'starts with hello',
+        [otherwise]: () => 'other',
+      })
+
+      expect(result).toBe('other')
+    })
+
+    it('should not throw and return otherwise if value is not a string', () => {
+      const result = match(123)({
+        [regex(/\d+/)]: () => 'is number',
         [otherwise]: () => 'other',
       })
 
