@@ -22,7 +22,7 @@ yarn add @gabrielrufino/matchjs
 ### Import
 
 ```ts
-import { exclude, include, match, object, otherwise } from '@gabrielrufino/matchjs'
+import { exclude, include, match, object, otherwise, regex } from '@gabrielrufino/matchjs'
 ```
 
 ### Basic Example
@@ -92,6 +92,18 @@ const result = match(data)({
 console.log(result) // Output: "Complex match found"
 ```
 
+### Using `regex`
+
+```ts
+const result = match('user@gmail.com')({
+  [regex(/@gmail\.com$/)]: () => 'Gmail user',
+  [regex(/@outlook\.com$/)]: () => 'Outlook user',
+  [otherwise]: () => 'Other domain'
+})
+
+console.log(result) // Output: "Gmail user"
+```
+
 ## 🛠️ API
 
 ### `match(value)`
@@ -103,7 +115,7 @@ console.log(result) // Output: "Complex match found"
 A function that accepts an `options` object in the format `{ key: () => any }`, where:
 - `key` can be:
   - An exact value to match (for primitive values).
-  - An operator like `include`, `exclude`, or `object`.
+  - An operator like `include`, `exclude`, `object`, or `regex`.
   - The `otherwise` symbol as a fallback.
 
 #### Examples
@@ -134,6 +146,24 @@ Defines an object pattern for deep equality matching. Returns true if the input 
 ```ts
 const result = match({ a: 1, b: { c: 2 } })({
   [object({ a: 1, b: { c: 2 } })]: () => 'Deep match!',
+  [otherwise]: () => 'No match'
+})
+```
+
+---
+
+### `regex(pattern)`
+
+Matches a string value against a given regular expression. Returns true if the regular expression `test` method returns true for the input string.
+Non-string values will bypass the regex check and automatically fall through.
+
+#### Parameters
+- `pattern`: a `RegExp` instance to test the matched value against.
+
+#### Example
+```ts
+const result = match('hello')({
+  [regex(/^h/)]: () => 'Starts with H!',
   [otherwise]: () => 'No match'
 })
 ```
