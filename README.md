@@ -150,8 +150,6 @@ const result = match({ a: 1, b: { c: 2 } })({
 })
 ```
 
-```
-
 ---
 
 ### `regex(pattern)`
