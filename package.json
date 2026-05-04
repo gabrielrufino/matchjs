@@ -1,6 +1,6 @@
 {
   "name": "@gabrielrufino/matchjs",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "",
   "author": "Gabriel Rufino <contato@gabrielrufino.com>",
   "license": "UNLICENSED",
@@ -19,10 +19,10 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^6.7.3",
-    "@stryker-mutator/vitest-runner": "^9.5.1",
-    "@types/node": "^25.3.2",
-    "@vitest/coverage-v8": "^4.0.18",
-    "eslint": "^9.39.3",
+    "@stryker-mutator/vitest-runner": "^9.6.1",
+    "@types/node": "^25.6.0",
+    "@vitest/coverage-v8": "^4.1.2",
+    "eslint": "^9.39.4",
     "typescript": "^5.9.3",
     "vitest": "^4.0.15"
   }
