@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { exclude, include, regex } from './keyers'
+import { exclude, include, range, regex } from './keyers'
 import { object } from './keyers/object'
 import { match } from './match'
 import { otherwise } from './symbols'
@@ -87,6 +87,72 @@ describe(match.name, () => {
 
       const result = match(testObject)({
         [object({ a: 1, b: { c: 2 } })]: () => 'matched object',
+        [otherwise]: () => 'other',
+      })
+
+      expect(result).toBe('other')
+    })
+  })
+
+  describe('range', () => {
+    it('should match when value is within inclusive range', () => {
+      const result = match(5)({
+        [range(1, 10)]: () => 'between 1 and 10',
+        [otherwise]: () => 'other',
+      })
+
+      expect(result).toBe('between 1 and 10')
+    })
+
+    it('should match when value is at the boundary of inclusive range', () => {
+      const resultMin = match(1)({
+        [range(1, 10)]: () => 'matched',
+        [otherwise]: () => 'other',
+      })
+      const resultMax = match(10)({
+        [range(1, 10)]: () => 'matched',
+        [otherwise]: () => 'other',
+      })
+
+      expect(resultMin).toBe('matched')
+      expect(resultMax).toBe('matched')
+    })
+
+    it('should not match when value is at the boundary of exclusive range', () => {
+      const resultMin = match(1)({
+        [range(1, 10, { minInclusive: false })]: () => 'matched',
+        [otherwise]: () => 'other',
+      })
+      const resultMax = match(10)({
+        [range(1, 10, { maxInclusive: false })]: () => 'matched',
+        [otherwise]: () => 'other',
+      })
+
+      expect(resultMin).toBe('other')
+      expect(resultMax).toBe('other')
+    })
+
+    it('should match when value is within exclusive range', () => {
+      const result = match(5)({
+        [range(1, 10, { minInclusive: false, maxInclusive: false })]: () => 'between 1 and 10',
+        [otherwise]: () => 'other',
+      })
+
+      expect(result).toBe('between 1 and 10')
+    })
+
+    it('should not match when value is outside range', () => {
+      const result = match(11)({
+        [range(1, 10)]: () => 'between 1 and 10',
+        [otherwise]: () => 'other',
+      })
+
+      expect(result).toBe('other')
+    })
+
+    it('should not throw and return otherwise if value is not a number', () => {
+      const result = match('5')({
+        [range(1, 10)]: () => 'matched',
         [otherwise]: () => 'other',
       })
 
