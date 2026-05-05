@@ -3,12 +3,12 @@ export interface RangeOptions {
   maxInclusive?: boolean
 }
 
-export function range(min: number, max: number, options: RangeOptions = { minInclusive: true, maxInclusive: true }) {
+export function range(min: number, max: number, { minInclusive = true, maxInclusive = true }: RangeOptions = {}) {
   return JSON.stringify({
     keyer: range.name,
     min,
     max,
-    minInclusive: options.minInclusive ?? true,
-    maxInclusive: options.maxInclusive ?? true,
+    minInclusive,
+    maxInclusive,
   })
 }
