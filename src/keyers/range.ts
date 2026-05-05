@@ -1,4 +1,4 @@
-export type RangeOptions = {
+export interface RangeOptions {
   minInclusive?: boolean
   maxInclusive?: boolean
 }
