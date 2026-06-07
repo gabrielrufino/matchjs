@@ -8,7 +8,7 @@
     "progress"
   ],
   "htmlReporter": {
-    "baseDir": ".stryker-reports"
+    "fileName": ".stryker-reports/index.html"
   },
   "testRunner": "vitest",
   "testRunner_comment": "Take a look at https://stryker-mutator.io/docs/stryker-js/vitest-runner for information about the vitest plugin.",

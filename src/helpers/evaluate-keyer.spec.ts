@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { exclude, include } from '../keyers'
+import { exclude, include, range } from '../keyers'
 import { object } from '../keyers/object'
 import { regex } from '../keyers/regex'
 import { evaluateKeyer } from './evaluate-keyer'
@@ -76,12 +76,59 @@ describe(evaluateKeyer.name, () => {
     })
   })
 
+  describe(range.name, () => {
+    it('should return true when value is strictly greater than min and strictly less than max', () => {
+      const parsed = { keyer: range.name, min: 10, max: 20, minInclusive: false, maxInclusive: false }
+      expect(evaluateKeyer(parsed, 15)).toBe(true)
+    })
+
+    it('should return false when value is equal to min and minInclusive is false', () => {
+      const parsed = { keyer: range.name, min: 10, max: 20, minInclusive: false, maxInclusive: false }
+      expect(evaluateKeyer(parsed, 10)).toBe(false)
+    })
+
+    it('should return false when value is equal to max and maxInclusive is false', () => {
+      const parsed = { keyer: range.name, min: 10, max: 20, minInclusive: false, maxInclusive: false }
+      expect(evaluateKeyer(parsed, 20)).toBe(false)
+    })
+
+    it('should return true when value is equal to min and minInclusive is true', () => {
+      const parsed = { keyer: range.name, min: 10, max: 20, minInclusive: true, maxInclusive: false }
+      expect(evaluateKeyer(parsed, 10)).toBe(true)
+    })
+
+    it('should return true when value is equal to max and maxInclusive is true', () => {
+      const parsed = { keyer: range.name, min: 10, max: 20, minInclusive: false, maxInclusive: true }
+      expect(evaluateKeyer(parsed, 20)).toBe(true)
+    })
+
+    it('should return false when value is less than min', () => {
+      const parsed = { keyer: range.name, min: 10, max: 20, minInclusive: true, maxInclusive: true }
+      expect(evaluateKeyer(parsed, 5)).toBe(false)
+    })
+
+    it('should return false when value is greater than max', () => {
+      const parsed = { keyer: range.name, min: 10, max: 20, minInclusive: true, maxInclusive: true }
+      expect(evaluateKeyer(parsed, 25)).toBe(false)
+    })
+
+    it('should return false when using range keyer but value is not a number', () => {
+      const parsed = { keyer: range.name, min: 10, max: 20, minInclusive: true, maxInclusive: true }
+      expect(evaluateKeyer(parsed, '15')).toBe(false)
+    })
+  })
+
   describe('unknown', () => {
     it('should return false for unknown keyer names', () => {
       const parsed = { keyer: 'unknown', data: 123 }
       const result = evaluateKeyer(parsed, 'any')
 
       expect(result).toBe(false)
+    })
+
+    it('should return false for unknown keyer names when value is a number', () => {
+      const parsed = { keyer: 'unknown', min: 0, max: 20 }
+      expect(evaluateKeyer(parsed, 10)).toBe(false)
     })
   })
 })
