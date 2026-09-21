@@ -1,15 +1,13 @@
 import { dequal } from 'dequal'
-import { exclude, include, range } from '../keyers'
-import { object } from '../keyers/object'
-import { regex } from '../keyers/regex'
+import { exclude, include, object, range, regex } from '../keyers'
 
 export function evaluateKeyer(parsed: any, value: any) {
   if (parsed.keyer === include.name) {
-    return parsed.items.includes(value)
+    return parsed.items.some((item: any) => dequal(item, value))
   }
 
   if (parsed.keyer === exclude.name) {
-    return !parsed.items.includes(value)
+    return !parsed.items.some((item: any) => dequal(item, value))
   }
 
   if (parsed.keyer === object.name) {

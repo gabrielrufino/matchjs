@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { exclude, include, range, regex } from './keyers'
-import { object } from './keyers/object'
+import { exclude, include, object, range, regex } from './keyers'
 import { match } from './match'
 import { otherwise } from './symbols'
 
@@ -47,6 +46,48 @@ describe(match.name, () => {
     expect(result).toBe('other')
   })
 
+  it('should not match prototype properties like toString or __proto__ unless explicitly defined', () => {
+    const resultToString = match('toString')({
+      [otherwise]: () => 'other',
+    })
+    const resultProto = match('__proto__')({
+      [otherwise]: () => 'other',
+    })
+    expect(resultToString).toBe('other')
+    expect(resultProto).toBe('other')
+  })
+
+  it('should match prototype property names if explicitly defined on options', () => {
+    const result = match('toString')({
+      toString: () => 'custom toString',
+      [otherwise]: () => 'other',
+    })
+    expect(result).toBe('custom toString')
+  })
+
+  it('should work with boolean values', () => {
+    const resultTrue = match(true)({
+      true: () => 'yes',
+      false: () => 'no',
+      [otherwise]: () => 'other',
+    })
+    const resultFalse = match(false)({
+      true: () => 'yes',
+      false: () => 'no',
+      [otherwise]: () => 'other',
+    })
+    expect(resultTrue).toBe('yes')
+    expect(resultFalse).toBe('no')
+  })
+
+  it('should return the otherwise case with boolean values if no match is found', () => {
+    const result = match(true)({
+      false: () => 'no',
+      [otherwise]: () => 'other',
+    })
+    expect(result).toBe('other')
+  })
+
   describe('include', () => {
     it('should return the expected result when the value matches one of the value in the `include` arguments', () => {
       const result = match('a')({
@@ -56,6 +97,15 @@ describe(match.name, () => {
       })
 
       expect(result).toBe('a, b or c')
+    })
+
+    it('should match objects using deep equality in `include`', () => {
+      const result = match({ id: 2 })({
+        [include({ id: 1 }, { id: 2 })]: () => 'matched object in set',
+        [otherwise]: () => 'other',
+      })
+
+      expect(result).toBe('matched object in set')
     })
   })
 
@@ -67,6 +117,15 @@ describe(match.name, () => {
       })
 
       expect(result).toBe('a, b or c')
+    })
+
+    it('should match objects using deep equality in `exclude`', () => {
+      const result = match({ id: 3 })({
+        [exclude({ id: 1 }, { id: 2 })]: () => 'not in set',
+        [otherwise]: () => 'other',
+      })
+
+      expect(result).toBe('not in set')
     })
   })
 

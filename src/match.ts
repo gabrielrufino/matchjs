@@ -3,10 +3,10 @@ import { isIndexable } from './helpers/is-indexable'
 import { parseKeySafe } from './helpers/parse-key-safe'
 import { otherwise } from './symbols'
 
-export function match(value: string | symbol | number | Record<string, any>) {
-  return function (options: Record<string | symbol, () => any>) {
-    if (isIndexable(value) && options[value]) {
-      return options[value]()
+export function match<V = unknown>(value: V) {
+  return function <R>(options: Record<PropertyKey, () => R>): R | undefined {
+    if (isIndexable(value) && Object.prototype.hasOwnProperty.call(options, value as any)) {
+      return (options as Record<any, () => R>)[value as any]()
     }
 
     const parsedKeyers = Object
