@@ -5,7 +5,7 @@
 [![CD](https://github.com/gabrielrufino/matchjs/actions/workflows/cd.yml/badge.svg)](https://github.com/gabrielrufino/matchjs/actions/workflows/cd.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=gabrielrufino_matchjs&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=gabrielrufino_matchjs)
 
-`MatchJS` is a flexible library that implements a value matching mechanism with support for custom cases, including special operators like `include`, `exclude`, `object`, and a fallback `otherwise`. It supports matching both primitive values and complex objects with deep equality comparison.
+`MatchJS` is a flexible library that implements a value matching mechanism with support for custom cases, including special operators like `include`, `exclude`, `object`, `range`, `regex`, and a fallback `otherwise`. It supports matching primitive values, sets, numerical intervals, regular expressions, and complex objects with deep equality comparison.
 
 ## 📦 Installation
 
@@ -22,7 +22,7 @@ yarn add @gabrielrufino/matchjs
 ### Import
 
 ```ts
-import { exclude, include, match, object, otherwise, regex } from '@gabrielrufino/matchjs'
+import { exclude, include, match, object, otherwise, range, regex } from '@gabrielrufino/matchjs'
 ```
 
 ### Basic Example
@@ -92,6 +92,18 @@ const result = match(data)({
 console.log(result) // Output: "Complex match found"
 ```
 
+### Using `range`
+
+```ts
+const result = match(15)({
+  [range(1, 10)]: () => 'Between 1 and 10',
+  [range(11, 20)]: () => 'Between 11 and 20',
+  [otherwise]: () => 'Out of range'
+})
+
+console.log(result) // Output: "Between 11 and 20"
+```
+
 ### Using `regex`
 
 ```ts
@@ -109,13 +121,13 @@ console.log(result) // Output: "Gmail user"
 ### `match(value)`
 
 #### Parameters
-- `value`: The value to be evaluated (string, number, symbol, or object).
+- `value`: The value to be evaluated (string, number, boolean, symbol, or object).
 
 #### Returns
 A function that accepts an `options` object in the format `{ key: () => any }`, where:
 - `key` can be:
-  - An exact value to match (for primitive values).
-  - An operator like `include`, `exclude`, `object`, or `regex`.
+  - An exact value to match (for primitive values like strings, numbers, or booleans).
+  - An operator like `include`, `exclude`, `object`, `range`, or `regex`.
   - The `otherwise` symbol as a fallback.
 
 #### Examples
@@ -147,6 +159,28 @@ Defines an object pattern for deep equality matching. Returns true if the input 
 const result = match({ a: 1, b: { c: 2 } })({
   [object({ a: 1, b: { c: 2 } })]: () => 'Deep match!',
   [otherwise]: () => 'No match'
+})
+```
+
+---
+
+### `range(min, max, options?)`
+
+Matches a number within a specified numerical interval. Returns true if the input value is a number within `min` and `max`. Non-numeric values will automatically fall through.
+
+#### Parameters
+- `min`: The minimum boundary number.
+- `max`: The maximum boundary number.
+- `options` *(optional)*:
+  - `minInclusive` *(boolean, default: `true`)*: Whether the minimum boundary is inclusive (`>=`) or exclusive (`>`).
+  - `maxInclusive` *(boolean, default: `true`)*: Whether the maximum boundary is inclusive (`<=`) or exclusive (`<`).
+
+#### Example
+```ts
+const result = match(10)({
+  [range(1, 10, { maxInclusive: false })]: () => 'Between 1 and 9',
+  [range(10, 20)]: () => 'Between 10 and 20 (inclusive)',
+  [otherwise]: () => 'Other'
 })
 ```
 
