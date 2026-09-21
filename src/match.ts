@@ -5,7 +5,7 @@ import { otherwise } from './symbols'
 
 export function match<V = unknown>(value: V) {
   return function <R>(options: Record<PropertyKey, () => R>): R | undefined {
-    if (isIndexable(value) && Object.prototype.hasOwnProperty.call(options, value as any)) {
+    if (isIndexable(value) && Object.hasOwn(options, value as any)) {
       return (options as Record<any, () => R>)[value as any]()
     }
 
