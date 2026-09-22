@@ -178,7 +178,7 @@ Matches a number within a specified numerical interval. Returns true if the inpu
 #### Example
 ```ts
 const result = match(10)({
-  [range(1, 10, { maxInclusive: false })]: () => 'Between 1 and 9',
+  [range(1, 10, { maxInclusive: false })]: () => 'Between 1 (inclusive) and 10 (exclusive)',
   [range(10, 20)]: () => 'Between 10 and 20 (inclusive)',
   [otherwise]: () => 'Other'
 })
