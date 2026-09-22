@@ -1,4 +1,5 @@
 export * from './exclude'
 export * from './include'
+export * from './object'
 export * from './range'
 export * from './regex'

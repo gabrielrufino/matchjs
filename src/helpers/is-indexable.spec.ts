@@ -26,7 +26,16 @@ describe(isIndexable.name, () => {
     expect(isIndexable(undefined)).toBe(false)
   })
 
-  it('should return false for boolean', () => {
-    expect(isIndexable(true)).toBe(false)
+  it('should return true for boolean', () => {
+    expect(isIndexable(true)).toBe(true)
+    expect(isIndexable(false)).toBe(true)
+  })
+
+  it('should return false for function', () => {
+    expect(isIndexable(() => {})).toBe(false)
+  })
+
+  it('should return false for bigint', () => {
+    expect(isIndexable(BigInt(1))).toBe(false)
   })
 })

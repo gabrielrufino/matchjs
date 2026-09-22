@@ -1,7 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { exclude, include, range } from '../keyers'
-import { object } from '../keyers/object'
-import { regex } from '../keyers/regex'
+import { exclude, include, object, range, regex } from '../keyers'
 import { evaluateKeyer } from './evaluate-keyer'
 
 describe(evaluateKeyer.name, () => {
@@ -19,6 +17,13 @@ describe(evaluateKeyer.name, () => {
 
       expect(result).toBe(false)
     })
+
+    it('should return true when using include keyer and object deeply equals one of items', () => {
+      const parsed = { keyer: include.name, items: [{ a: 1 }, { b: 2 }] }
+      const result = evaluateKeyer(parsed, { a: 1 })
+
+      expect(result).toBe(true)
+    })
   })
 
   describe(exclude.name, () => {
@@ -34,6 +39,13 @@ describe(evaluateKeyer.name, () => {
       const result = evaluateKeyer(parsed, 'd')
 
       expect(result).toBe(true)
+    })
+
+    it('should return false when using exclude keyer and object deeply equals one of items', () => {
+      const parsed = { keyer: exclude.name, items: [{ a: 1 }, { b: 2 }] }
+      const result = evaluateKeyer(parsed, { a: 1 })
+
+      expect(result).toBe(false)
     })
   })
 
