@@ -1,3 +1,3 @@
-export function isIndexable(value: unknown): value is string | number | symbol {
-  return ['string', 'number', 'symbol'].includes(typeof value)
+export function isIndexable(value: unknown): value is string | number | symbol | boolean {
+  return ['string', 'number', 'symbol', 'boolean'].includes(typeof value)
 }
