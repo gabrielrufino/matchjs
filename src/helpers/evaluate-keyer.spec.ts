@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { exclude, include, object, range, regex } from '../keyers'
+import { exclude, include, instanceOf, object, range, regex } from '../keyers'
 import { evaluateKeyer } from './evaluate-keyer'
 
 describe(evaluateKeyer.name, () => {
@@ -127,6 +127,34 @@ describe(evaluateKeyer.name, () => {
     it('should return false when using range keyer but value is not a number', () => {
       const parsed = { keyer: range.name, min: 10, max: 20, minInclusive: true, maxInclusive: true }
       expect(evaluateKeyer(parsed, '15')).toBe(false)
+    })
+  })
+
+  describe(instanceOf.name, () => {
+    it('should return true when value is an instance of the constructor', () => {
+      class Foo {}
+      const serialized = instanceOf(Foo)
+      const parsed = JSON.parse(serialized)
+      const result = evaluateKeyer(parsed, new Foo())
+
+      expect(result).toBe(true)
+    })
+
+    it('should return false when value is not an instance of the constructor', () => {
+      class Foo {}
+      class Bar {}
+      const serialized = instanceOf(Foo)
+      const parsed = JSON.parse(serialized)
+      const result = evaluateKeyer(parsed, new Bar())
+
+      expect(result).toBe(false)
+    })
+
+    it('should return false when constructor id is not found in registry', () => {
+      const parsed = { keyer: instanceOf.name, id: 'non-existent' }
+      const result = evaluateKeyer(parsed, new Date())
+
+      expect(result).toBe(false)
     })
   })
 
