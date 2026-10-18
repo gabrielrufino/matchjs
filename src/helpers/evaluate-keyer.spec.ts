@@ -1,7 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { exclude, include, range } from '../keyers'
-import { object } from '../keyers/object'
-import { regex } from '../keyers/regex'
+import { exclude, include, instanceOf, object, range, regex } from '../keyers'
 import { evaluateKeyer } from './evaluate-keyer'
 
 describe(evaluateKeyer.name, () => {
@@ -19,6 +17,13 @@ describe(evaluateKeyer.name, () => {
 
       expect(result).toBe(false)
     })
+
+    it('should return true when using include keyer and object deeply equals one of items', () => {
+      const parsed = { keyer: include.name, items: [{ a: 1 }, { b: 2 }] }
+      const result = evaluateKeyer(parsed, { a: 1 })
+
+      expect(result).toBe(true)
+    })
   })
 
   describe(exclude.name, () => {
@@ -34,6 +39,13 @@ describe(evaluateKeyer.name, () => {
       const result = evaluateKeyer(parsed, 'd')
 
       expect(result).toBe(true)
+    })
+
+    it('should return false when using exclude keyer and object deeply equals one of items', () => {
+      const parsed = { keyer: exclude.name, items: [{ a: 1 }, { b: 2 }] }
+      const result = evaluateKeyer(parsed, { a: 1 })
+
+      expect(result).toBe(false)
     })
   })
 
@@ -115,6 +127,34 @@ describe(evaluateKeyer.name, () => {
     it('should return false when using range keyer but value is not a number', () => {
       const parsed = { keyer: range.name, min: 10, max: 20, minInclusive: true, maxInclusive: true }
       expect(evaluateKeyer(parsed, '15')).toBe(false)
+    })
+  })
+
+  describe(instanceOf.name, () => {
+    it('should return true when value is an instance of the constructor', () => {
+      class Foo {}
+      const serialized = instanceOf(Foo)
+      const parsed = JSON.parse(serialized)
+      const result = evaluateKeyer(parsed, new Foo())
+
+      expect(result).toBe(true)
+    })
+
+    it('should return false when value is not an instance of the constructor', () => {
+      class Foo {}
+      class Bar {}
+      const serialized = instanceOf(Foo)
+      const parsed = JSON.parse(serialized)
+      const result = evaluateKeyer(parsed, new Bar())
+
+      expect(result).toBe(false)
+    })
+
+    it('should return false when constructor id is not found in registry', () => {
+      const parsed = { keyer: instanceOf.name, id: 'non-existent' }
+      const result = evaluateKeyer(parsed, new Date())
+
+      expect(result).toBe(false)
     })
   })
 

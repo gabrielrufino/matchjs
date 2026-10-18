@@ -1,4 +1,6 @@
 export * from './exclude'
 export * from './include'
+export * from './instanceof'
+export * from './object'
 export * from './range'
 export * from './regex'
