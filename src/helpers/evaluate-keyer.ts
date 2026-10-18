@@ -1,5 +1,5 @@
 import { dequal } from 'dequal'
-import { exclude, include, object, range, regex } from '../keyers'
+import { exclude, getConstructor, include, instanceOf, object, range, regex } from '../keyers'
 
 export function evaluateKeyer(parsed: any, value: any) {
   if (parsed.keyer === include.name) {
@@ -12,6 +12,14 @@ export function evaluateKeyer(parsed: any, value: any) {
 
   if (parsed.keyer === object.name) {
     return dequal(value, parsed.value)
+  }
+
+  if (parsed.keyer === instanceOf.name) {
+    const constructor = getConstructor(parsed.id)
+    if (!constructor) {
+      return false
+    }
+    return value instanceof constructor
   }
 
   if (parsed.keyer === regex.name && typeof value === 'string') {

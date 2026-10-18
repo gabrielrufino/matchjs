@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { exclude, include, object, range, regex } from './keyers'
+import { exclude, include, instanceOf, object, range, regex } from './keyers'
 import { match } from './match'
 import { otherwise } from './symbols'
 
@@ -245,6 +245,42 @@ describe(match.name, () => {
       })
 
       expect(result).toBe('other')
+    })
+  })
+
+  describe('instanceOf', () => {
+    it('should return the expected result when the value is an instance of the class', () => {
+      class User {
+        constructor(public name: string) {}
+      }
+
+      const result = match(new User('Alice'))({
+        [instanceOf(User)]: () => 'is User',
+        [otherwise]: () => 'other',
+      })
+
+      expect(result).toBe('is User')
+    })
+
+    it('should return the otherwise case when the value is not an instance of the class', () => {
+      class User {}
+      class Admin {}
+
+      const result = match(new User())({
+        [instanceOf(Admin)]: () => 'is Admin',
+        [otherwise]: () => 'other',
+      })
+
+      expect(result).toBe('other')
+    })
+
+    it('should work with built-in constructors', () => {
+      const result = match(new Error('test'))({
+        [instanceOf(Error)]: () => 'is Error',
+        [otherwise]: () => 'other',
+      })
+
+      expect(result).toBe('is Error')
     })
   })
 })
